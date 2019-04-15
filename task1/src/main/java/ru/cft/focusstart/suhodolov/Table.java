@@ -16,8 +16,38 @@ class Table {
      */
     public Table(int size) {
         this.size = size;
-        setCellLength(size * size);
-        setSeparatingLine();
+    }
+
+    /**
+     * Выводит таблицу
+     */
+    public void printTable() {
+        if (sepLine == null) {
+            setSeparatingLine();
+        }
+
+        for (int i = 1; i <= size; i++) {
+            System.out.println(getNumberLine(i));
+            System.out.println(sepLine);
+        }
+    }
+
+    /**
+     * Составляет разделяющую строку
+     */
+    private void setSeparatingLine() {
+        if (cellLength == 0) {
+            setCellLength(size * size);
+        }
+
+        sepLine = new StringBuilder();
+
+        for (int i = 0; i < size; i++) {
+            sepLine.append("-".repeat(cellLength));
+            if (i != size - 1) {
+                sepLine.append("+");
+            }
+        }
     }
 
     /**
@@ -30,35 +60,12 @@ class Table {
     }
 
     /**
-     * Вычисляет разделяющую строку
-     */
-    private void setSeparatingLine() {
-        sepLine = new StringBuilder();
-
-        for (int i = 0; i < size; i++) {
-            sepLine.append("-".repeat(cellLength));
-            if (i != size - 1) {
-                sepLine.append("+");
-            }
-        }
-    }
-
-    /**
-     * Выводит таблицу
-     */
-    public void printTable() {
-        for (int i = 1; i <= size; i++) {
-            printNumberLine(i);
-            System.out.println(sepLine);
-        }
-    }
-
-    /**
-     * Выводит строку с числами
+     * Составляет строку с числами и возвращает ее
      *
-     * @param row - номер строки
+     * @param row - номер строки таблицы
+     * @return строка с числами
      */
-    private void printNumberLine(int row) {
+    private StringBuilder getNumberLine(int row) {
         StringBuilder numLine = new StringBuilder();
         int num;
         int numLength;
@@ -73,6 +80,6 @@ class Table {
                 numLine.append("|");
             }
         }
-        System.out.println(numLine);
+        return numLine;
     }
 }

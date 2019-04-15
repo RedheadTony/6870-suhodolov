@@ -5,7 +5,9 @@ package ru.cft.focusstart.suhodolov.exceptions;
  */
 public class MismatchSizeException extends Exception {
 
-    public MismatchSizeException(String message, int num) {
-        super(message + num);
+    private static final String ERROR_MESSAGE = "This value is incorrect: ";
+
+    public MismatchSizeException(int num) {
+        super(ERROR_MESSAGE + num);
     }
 }

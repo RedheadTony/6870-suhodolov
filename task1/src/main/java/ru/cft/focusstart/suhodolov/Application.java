@@ -7,6 +7,9 @@ import java.util.Scanner;
 
 public class Application {
 
+    private static final int MIN_INPUT_VALUE = 1;
+    private static final int MAX_INPUT_VALUE = 32;
+
     public static void main(String[] args) {
         int size;
 
@@ -31,8 +34,8 @@ public class Application {
      * @throws MismatchSizeException - выбрасывается при размере, не входящем в диапазон значений
      */
     private static void checkSize(int size) throws MismatchSizeException {
-        if (size < 1 || size > 32) {
-            throw new MismatchSizeException("This value is incorrect: ", size);
+        if (size < MIN_INPUT_VALUE || size > MAX_INPUT_VALUE) {
+            throw new MismatchSizeException(size);
         }
     }
 }

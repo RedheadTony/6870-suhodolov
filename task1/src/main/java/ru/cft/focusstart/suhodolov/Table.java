@@ -16,8 +16,9 @@ class Table {
      */
     public Table(int size) {
         this.size = size;
-        this.cellLength = getCellLength(size * size);
-        this.sepLine = getSeparatingLine(size);
+        int cellLength = getCellLength(size * size);
+        this.cellLength = cellLength;
+        this.sepLine = getSeparatingLine(size, cellLength);
     }
 
     /**
@@ -34,12 +35,10 @@ class Table {
      * Составляет разделяющую строку
      *
      * @param size - размер таблицы
+     * @param cellLength - размер ячейки
      * @return разделяющую строку
      */
-    private StringBuilder getSeparatingLine(int size) {
-        if (cellLength == 0) {
-            cellLength = getCellLength(size * size);
-        }
+    private StringBuilder getSeparatingLine(int size, int cellLength) {
         StringBuilder separatingLine = new StringBuilder();
 
         for (int i = 0; i < size; i++) {

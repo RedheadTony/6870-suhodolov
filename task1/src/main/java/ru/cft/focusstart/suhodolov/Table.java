@@ -16,16 +16,14 @@ class Table {
      */
     public Table(int size) {
         this.size = size;
+        this.cellLength = getCellLength(size * size);
+        this.sepLine = getSeparatingLine(size);
     }
 
     /**
      * Выводит таблицу
      */
     public void printTable() {
-        if (sepLine == null) {
-            setSeparatingLine();
-        }
-
         for (int i = 1; i <= size; i++) {
             System.out.println(getNumberLine(i));
             System.out.println(sepLine);
@@ -34,29 +32,33 @@ class Table {
 
     /**
      * Составляет разделяющую строку
+     *
+     * @param size - размер таблицы
+     * @return разделяющую строку
      */
-    private void setSeparatingLine() {
+    private StringBuilder getSeparatingLine(int size) {
         if (cellLength == 0) {
-            setCellLength(size * size);
+            cellLength = getCellLength(size * size);
         }
-
-        sepLine = new StringBuilder();
+        StringBuilder separatingLine = new StringBuilder();
 
         for (int i = 0; i < size; i++) {
-            sepLine.append("-".repeat(cellLength));
+            separatingLine.append("-".repeat(cellLength));
             if (i != size - 1) {
-                sepLine.append("+");
+                separatingLine.append("+");
             }
         }
+        return separatingLine;
     }
 
     /**
      * По наибольшему числу в таблице вычисляет размер ячеек
      *
      * @param maxNumber - максимальное число в таблице
+     * @return размер ячеек
      */
-    private void setCellLength(int maxNumber) {
-        cellLength = String.valueOf(maxNumber).length();
+    private int getCellLength(int maxNumber) {
+        return String.valueOf(maxNumber).length();
     }
 
     /**

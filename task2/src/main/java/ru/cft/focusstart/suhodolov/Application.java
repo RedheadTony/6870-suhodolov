@@ -33,7 +33,7 @@ public class Application {
                 writer = new FileWriter(args[1], false);
             }
         } catch (IOException ex) {
-            System.out.println("Problem with a input/output files");
+            System.out.println("Problem with opening input/output files");
         }
     }
 
@@ -73,11 +73,16 @@ public class Application {
             } else {
                 System.out.println("Invalid information in input file");
             }
-            reader.close();
         } catch (IOException ex) {
             System.out.println("Problem with reading information from input file");
         } catch (NumberFormatException ex) {
             System.out.println("Invalid parameters format");
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                System.out.println("Problem with closing the input file");
+            }
         }
     }
 
@@ -88,12 +93,19 @@ public class Application {
         try {
             if (writer != null) {
                 writer.write(shape.getInformation().toString());
-                writer.close();
             } else {
                 System.out.println(shape.getInformation());
             }
         } catch (IOException ex) {
             System.out.println("Problem with writing information to output file");
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                System.out.println("Problem with closing the output file");
+            }
         }
     }
 }

@@ -47,9 +47,15 @@ public class Application {
     private static ArrayList<Double> parseShapeParams(String strParams) throws NumberFormatException {
         ArrayList<Double> params = new ArrayList<>();
         String[] strParamsArr = strParams.split("[ ]");
+        double num;
 
         for (String s : strParamsArr) {
-            params.add(Double.parseDouble(s));
+            num = Double.parseDouble(s);
+            if (num > 0) {
+                params.add(num);
+            } else {
+                throw new NumberFormatException();
+            }
         }
 
         return params;

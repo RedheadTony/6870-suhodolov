@@ -1,5 +1,7 @@
 package ru.cft.focusstart.suhodolov.shapes;
 
+import ru.cft.focusstart.suhodolov.exceptions.ApplicationException;
+
 /**
  * Класс представляющий круг, наследуемый от класса Shape
  */
@@ -13,7 +15,10 @@ public class Circle extends Shape {
      *
      * @param radius радиус круга
      */
-    public Circle(double radius) {
+    public Circle(double radius) throws ApplicationException {
+        if (radius <= 0) {
+            throw new ApplicationException("Invalid circle parameters");
+        }
         this.name = "Круг";
 
         this.radius = radius;

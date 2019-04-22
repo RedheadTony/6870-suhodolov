@@ -1,137 +1,75 @@
 package ru.cft.focusstart.suhodolov;
 
+import ru.cft.focusstart.suhodolov.exceptions.ApplicationException;
 import ru.cft.focusstart.suhodolov.shapes.*;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Application {
 
-    private BufferedReader reader;
-    private FileWriter writer;
-    private Shape shape;
-
-    private String shapeType;
-    private List<Double> params;
-
     public static void main(String[] args) {
-        Application app = new Application();
-        app.parseArgs(args);
-        if (app.reader != null) {
-            app.readInputFile();
+        if (args.length < 1 || args.length > 2) {
+            System.out.println("Invalid arguments");
+            return;
         }
-        if (app.shapeType != null && app.params != null) {
-            app.createShape(app.shapeType, app.params);
-        }
-        if (app.shape != null) {
-            app.writeInfo();
-        }
-    }
 
-    /**
-     * Метод, который парсит аргументы командной строки
-     *
-     * @param args строковый массив, содержащий аргументы
-     */
-    private void parseArgs(String[] args) {
         try {
-            reader = new BufferedReader(new FileReader(args[0]));
-            if (args.length >= 2) {
-                writer = new FileWriter(args[1], false);
-            }
-        } catch (IOException ex) {
-            System.out.println("Problem with opening input/output files");
-        }
-    }
+            ShapeFileParser parser = new ShapeFileParser(args[0]);
+            parser.readFile();
+            Shape shape = createShape(parser.getShapeType(), parser.getShapeParams());
 
-    /**
-     * Метод, который парсит параметры фигуры из строки
-     *
-     * @param strParams строка, содержащая параметры
-     * @return List, содержащий параметры в формате Double
-     * @throws NumberFormatException выбрасывается, когда в строке встречаются не подходящие параметры
-     */
-    private List<Double> parseShapeParams(String strParams) throws NumberFormatException {
-        List<Double> params = new ArrayList<>();
-        String[] strParamsArr = strParams.split("[ ]");
-        double num;
-
-        for (String s : strParamsArr) {
-            num = Double.parseDouble(s);
-            if (num > 0) {
-                params.add(num);
+            if (args.length == 2) {
+                writeShapeToFile(shape, args[1]);
             } else {
-                throw new NumberFormatException();
+                writeShapeToConsole(shape);
             }
-        }
-
-        return params;
-    }
-
-    /**
-     * Метод, который считывает информацию из входного файла
-     */
-    private void readInputFile() {
-        try {
-            shapeType = reader.readLine();
-            String strParams = reader.readLine();
-            params = parseShapeParams(strParams);
-        } catch (IOException ex) {
-            System.out.println("Problem with reading information from input file");
-        } catch (NumberFormatException ex) {
-            System.out.println("Invalid parameters format");
-        } finally {
-            try {
-                reader.close();
-            } catch (IOException ex) {
-                System.out.println("Problem with closing the input file");
-            }
-        }
-    }
-
-    /**
-     * Метод, который создает объект фигуры с помощью считанных параметров
-     *
-     * @param shapeType тип фигуры
-     * @param params    числовые параметры
-     */
-    private void createShape(String shapeType, List<Double> params) {
-        try {
-            if (shapeType.equals(ShapeType.CIRCLE.name()) && params.size() == 1) {
-                shape = new Circle(params.get(0));
-            } else if (shapeType.equals(ShapeType.RECTANGLE.name()) && params.size() == 2) {
-                shape = new Rectangle(params.get(0), params.get(1));
-            } else if (shapeType.equals(ShapeType.TRIANGLE.name()) && params.size() == 3) {
-                shape = new Triangle(params.get(0), params.get(1), params.get(2));
-            } else {
-                System.out.println("Invalid information in input file");
-            }
-        } catch (NumberFormatException ex) {
+        } catch (ApplicationException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     /**
-     * Метод, который записывает информацию об объекте либо в выходной файл, либо в консоль
+     * Метод, который создает объект фигуры с помощью считанных параметров и возвращает его
+     *
+     * @param shapeType тип фигуры
+     * @param params    числовые параметры
+     * @return объект типа Shape
+     * @throws ApplicationException исключение, которое выбрасывается при проблемах с приложением
      */
-    private void writeInfo() {
-        try {
-            if (writer != null) {
-                writer.write(shape.getInformation().toString());
-            } else {
-                System.out.println(shape.getInformation());
-            }
-        } catch (IOException ex) {
-            System.out.println("Problem with writing information to output file");
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException ex) {
-                System.out.println("Problem with closing the output file");
-            }
+    private static Shape createShape(String shapeType, List<Double> params) throws ApplicationException {
+        if (shapeType.equals(ShapeType.CIRCLE.name()) && params.size() == 1) {
+            return new Circle(params.get(0));
+        } else if (shapeType.equals(ShapeType.RECTANGLE.name()) && params.size() == 2) {
+            return new Rectangle(params.get(0), params.get(1));
+        } else if (shapeType.equals(ShapeType.TRIANGLE.name()) && params.size() == 3) {
+            return new Triangle(params.get(0), params.get(1), params.get(2));
+        } else {
+            throw new ApplicationException("Invalid information in input file");
         }
+    }
+
+    /**
+     * Метод, который записывает информацию о фигуре в выходной файл
+     *
+     * @param shape фигура
+     * @param file  имя файла
+     * @throws ApplicationException исключение, которое выбрасывается при проблемах с приложением
+     */
+    private static void writeShapeToFile(Shape shape, String file) throws ApplicationException {
+        try (FileWriter writer = new FileWriter(file, false)) {
+            writer.write(shape.getInformation().toString());
+        } catch (IOException ex) {
+            throw new ApplicationException("Problem with writing information to output file");
+        }
+    }
+
+    /**
+     * Метод, который записывает информацию о фигуре в консоль
+     *
+     * @param shape фигура
+     */
+    private static void writeShapeToConsole(Shape shape) {
+        System.out.println(shape.getInformation());
     }
 }

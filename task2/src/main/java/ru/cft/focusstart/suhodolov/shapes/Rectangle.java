@@ -1,5 +1,7 @@
 package ru.cft.focusstart.suhodolov.shapes;
 
+import ru.cft.focusstart.suhodolov.exceptions.ApplicationException;
+
 /**
  * Класс представляющий прямоугольник, наследуемый от класса Shape
  */
@@ -15,7 +17,10 @@ public class Rectangle extends Shape {
      * @param sideA 1-ая сторона прямоугольника
      * @param sideB 2-ая второна прямоугольника
      */
-    public Rectangle(double sideA, double sideB) {
+    public Rectangle(double sideA, double sideB) throws ApplicationException {
+        if (sideA <= 0 || sideB <= 0) {
+            throw new ApplicationException("Invalid rectangle parameters");
+        }
         this.name = "Прямоугольник";
 
         this.length = Math.max(sideA, sideB);

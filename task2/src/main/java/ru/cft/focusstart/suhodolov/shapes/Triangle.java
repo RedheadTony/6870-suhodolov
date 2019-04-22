@@ -1,5 +1,7 @@
 package ru.cft.focusstart.suhodolov.shapes;
 
+import ru.cft.focusstart.suhodolov.exceptions.ApplicationException;
+
 /**
  * Класс представляющий треугольник, наследуемый от класса Shape
  */
@@ -20,9 +22,10 @@ public class Triangle extends Shape {
      * @param sideB 2-ая сторона
      * @param sideC 3-я сторона
      */
-    public Triangle(double sideA, double sideB, double sideC) {
-        if (sideA + sideB < sideC || sideA + sideC < sideB || sideB + sideC < sideA) {
-            throw new NumberFormatException("Invalid triangle parameters");
+    public Triangle(double sideA, double sideB, double sideC) throws ApplicationException {
+        if (sideA <= 0 || sideB <= 0 || sideC <= 0 ||
+                sideA + sideB < sideC || sideA + sideC < sideB || sideB + sideC < sideA) {
+            throw new ApplicationException("Invalid triangle parameters");
         }
         this.name = "Треугольник";
 

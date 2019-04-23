@@ -58,8 +58,8 @@ public class Application {
     private static void writeShapeToFile(Shape shape, String file) throws ApplicationException {
         try (FileWriter writer = new FileWriter(file, false)) {
             writer.write(shape.getInformation().toString());
-        } catch (IOException ex) {
-            throw new ApplicationException("Problem with writing information to output file");
+        } catch (IOException e) {
+            throw new ApplicationException("Problem with writing information to output file", e);
         }
     }
 

@@ -16,7 +16,6 @@ public class Application {
 
         try {
             ShapeFileParser parser = new ShapeFileParser(args[0]);
-            parser.readFile();
             Shape shape = createShape(parser.getShapeType(), parser.getShapeParams());
 
             if (args.length == 2) {

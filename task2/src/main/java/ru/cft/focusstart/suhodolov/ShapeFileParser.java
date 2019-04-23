@@ -12,16 +12,11 @@ public class ShapeFileParser {
 
     private String shapeType;
     private List<Double> shapeParams;
-    private String file;
-
-    public ShapeFileParser(String file) {
-        this.file = file;
-    }
 
     /**
-     * Метод, который считывает информацию из входного файла
+     * Конструктор, который считывает информацию из входного файла
      */
-    public void readFile() throws ApplicationException {
+    public ShapeFileParser(String file) throws ApplicationException{
         try (BufferedReader reader = new BufferedReader(new FileReader(file))){
             shapeType = reader.readLine();
             String strParams = reader.readLine();

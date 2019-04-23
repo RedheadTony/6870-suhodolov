@@ -23,8 +23,8 @@ public class Application {
             } else {
                 writeShapeToConsole(shape);
             }
-        } catch (ApplicationException ex) {
-            System.out.println(ex.getMessage());
+        } catch (ApplicationException e) {
+            System.out.println(e.getMessage());
         }
     }
 

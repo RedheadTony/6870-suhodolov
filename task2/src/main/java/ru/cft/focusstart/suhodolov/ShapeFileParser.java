@@ -16,15 +16,15 @@ public class ShapeFileParser {
     /**
      * Конструктор, который считывает информацию из входного файла
      */
-    public ShapeFileParser(String file) throws ApplicationException{
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))){
+    public ShapeFileParser(String file) throws ApplicationException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             shapeType = reader.readLine();
             String strParams = reader.readLine();
             shapeParams = parseShapeParams(strParams);
-        } catch (IOException ex) {
-            throw new ApplicationException("Problem with reading information from input file");
-        } catch (NumberFormatException ex) {
-            throw new ApplicationException("Invalid parameters format");
+        } catch (IOException e) {
+            throw new ApplicationException("Problem with reading information from input file", e);
+        } catch (NumberFormatException e) {
+            throw new ApplicationException("Invalid parameters format", e);
         }
     }
 
@@ -48,6 +48,7 @@ public class ShapeFileParser {
 
     /**
      * Метод, который возвращает тип фигуры
+     *
      * @return тип фигуры
      */
     public String getShapeType() {
@@ -56,6 +57,7 @@ public class ShapeFileParser {
 
     /**
      * Метод, который возвращает параметры фигуры
+     *
      * @return параметры фигуры
      */
     public List<Double> getShapeParams() {

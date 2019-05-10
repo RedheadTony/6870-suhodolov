@@ -67,7 +67,7 @@ public class Board {
         return neighbours;
     }
 
-    public int makeValidCoordinate(int num, final int maxNum) {
+    public static int makeValidCoordinate(int num, final int maxNum) {
         if (num < 0) {
             num = 0;
         } else if (num > maxNum - 1) {

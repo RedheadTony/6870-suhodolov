@@ -83,7 +83,11 @@ public class Game {
                     return;
                 }
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    openCell(x, y);
+                    if (board.getCell(x, y).isChecked()) {
+                        openCellAroundFlags(x, y);
+                    } else {
+                        openCell(x, y);
+                    }
                 } else if (SwingUtilities.isRightMouseButton(e)) {
                     Cell cell = board.getCell(x, y);
 
@@ -118,6 +122,23 @@ public class Game {
         });
     }
 
+    private void openCellAroundFlags(final int x, final int y) {
+        Cell cell = board.getCell(x, y);
+        int surroundingFlags = 0;
+        for (int i = Board.makeValidCoordinate(cell.getX() - 1, cols);
+             i <= Board.makeValidCoordinate(cell.getX() + 1, cols); i++) {
+            for (int j = Board.makeValidCoordinate(cell.getY() - 1, rows);
+                 j <= Board.makeValidCoordinate(cell.getY() + 1, rows); j++) {
+                if (board.getCell(i, j).isFlagged()) {
+                    surroundingFlags++;
+                }
+            }
+        }
+        if (cell.getSurroundingMines() == surroundingFlags) {
+            openCellsAroundZero(cell);
+        }
+    }
+
     private void openCell(final int x, final int y) {
         Cell cell = board.getCell(x, y);
 
@@ -144,10 +165,10 @@ public class Game {
     }
 
     private void openCellsAroundZero(final Cell openedCell) {
-        for (int x = board.makeValidCoordinate(openedCell.getX() - 1, cols);
-             x <= board.makeValidCoordinate(openedCell.getX() + 1, cols); x++) {
-            for (int y = board.makeValidCoordinate(openedCell.getY() - 1, rows);
-                 y <= board.makeValidCoordinate(openedCell.getY() + 1, rows); y++) {
+        for (int x = Board.makeValidCoordinate(openedCell.getX() - 1, cols);
+             x <= Board.makeValidCoordinate(openedCell.getX() + 1, cols); x++) {
+            for (int y = Board.makeValidCoordinate(openedCell.getY() - 1, rows);
+                 y <= Board.makeValidCoordinate(openedCell.getY() + 1, rows); y++) {
                 openCell(x, y);
             }
         }

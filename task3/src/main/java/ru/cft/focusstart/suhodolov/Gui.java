@@ -10,10 +10,12 @@ public class Gui extends JFrame {
     private JButton smileButton;
     private JPanel boardPanel;
 
-    private JButton[][] buttons;
+    private int cols = 9;
+    private int rows = 9;
+
+    private JButton[][] buttons = new JButton[cols][rows];
 
     public Gui() {
-        buttons = new JButton[9][9];
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("CFT Minesweeper");
         setIconImage(new ImageIcon(Gui.class.getResource("/icons/icon.png")).getImage());
@@ -24,13 +26,22 @@ public class Gui extends JFrame {
         JMenuItem newGameItem = new JMenuItem("New Game");
         JMenuItem exitItem = new JMenuItem("Exit");
 
-        JMenu jMenu = new JMenu("File");
-        jMenu.add(newGameItem);
-        jMenu.add(exitItem);
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.add(newGameItem);
+        fileMenu.add(exitItem);
+
+        JMenuItem beginnerLevelItem = new JMenuItem("Beginner");
+        JMenuItem intermediateLevelItem = new JMenuItem("Intermediate");
+        JMenuItem expertLevelItem = new JMenuItem("Expert");
+
+        JMenu difficultyMenu = new JMenu("Game difficulty");
+        difficultyMenu.add(beginnerLevelItem);
+        difficultyMenu.add(intermediateLevelItem);
+        difficultyMenu.add(expertLevelItem);
 
         JMenuBar jMenuBar = new JMenuBar();
-        jMenuBar.add(jMenu);
-
+        jMenuBar.add(fileMenu);
+        jMenuBar.add(difficultyMenu);
         setJMenuBar(jMenuBar);
 
         JPanel smilePanel = new JPanel();
@@ -45,11 +56,16 @@ public class Gui extends JFrame {
 
         boardPanel = new JPanel();
 
-        boardPanel.setLayout(new GridLayout(9, 9));
+        boardPanel.setLayout(new GridLayout(cols, rows));
         add(boardPanel, BorderLayout.CENTER);
     }
 
-    public void setButton(final int x, final int y) {
+    public void changeDifficulty(final int rows, final int cols) {
+        buttons = new JButton[cols][rows];
+        boardPanel.setLayout(new GridLayout(cols, rows));
+    }
+
+    public void setBoardButton(final int x, final int y) {
         buttons[x][y] = new JButton();
         buttons[x][y].setIcon(new ImageIcon(Gui.class.getResource("/icons/closed.png")));
         buttons[x][y].setPreferredSize(buttonPreferredSize);

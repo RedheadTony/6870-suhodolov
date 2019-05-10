@@ -18,25 +18,30 @@ public class Game {
     private JButton[][] buttons;
 
     private boolean playing = false;
+    private int rows = 9;
+    private int cols = 9;
+    private int numberOfMines = 10;
 
     public Game() {
         this.gui = new Gui();
 
         setMenuListeners();
-        gui.getSmileButton().addActionListener(e -> newGame());
+        gui.getSmileButton().addActionListener(e -> newGame(rows, cols, numberOfMines));
+        gui.getSmileButton().setIcon(new ImageIcon(Gui.class.getResource("/icons/play_smile.png")));
 
-        newGame();
+        newGame(rows, cols, numberOfMines);
     }
 
-    private void newGame() {
-        gui.getSmileButton().setIcon(new ImageIcon(Gui.class.getResource("/icons/play_smile.png")));
+    private void newGame(final int rows, final int cols, final int numberOfMines) {
         gui.getBoardPanel().removeAll();
         gui.getBoardPanel().invalidate();
-        board = new Board(9, 9, 10);
+        gui.changeDifficulty(rows, cols);
+
+        board = new Board(rows, cols, numberOfMines);
         buttons = gui.getButtons();
-        for (int y = 0; y < 9; y++) {
-            for (int x = 0; x < 9; x++) {
-                gui.setButton(x, y);
+        for (int x = 0; x < cols; x++) {
+            for (int y = 0; y < rows; y++) {
+                gui.setBoardButton(x, y);
                 setButtonsListener(x, y);
                 gui.getBoardPanel().add(buttons[x][y]);
             }
@@ -51,13 +56,23 @@ public class Game {
 
     private void setMenuListeners() {
         JMenuBar jMenuBar = gui.getJMenuBar();
-        JMenu jMenu = jMenuBar.getMenu(0);
+        JMenu fileMenu = jMenuBar.getMenu(0);
 
-        JMenuItem newGameItem = jMenu.getItem(0);
-        newGameItem.addActionListener(e -> newGame());
+        JMenuItem newGameItem = fileMenu.getItem(0);
+        newGameItem.addActionListener(e -> newGame(rows, cols, numberOfMines));
 
-        JMenuItem exitItem = jMenu.getItem(1);
+        JMenuItem exitItem = fileMenu.getItem(1);
         exitItem.addActionListener(e -> System.exit(0));
+
+        JMenu difficultyMenu = jMenuBar.getMenu(1);
+        JMenuItem beginnerLevelItem = difficultyMenu.getItem(0);
+        beginnerLevelItem.addActionListener(e -> newGame(this.rows = 9, this.cols = 9, this.numberOfMines = 10));
+
+        JMenuItem intermediateLevelItem = difficultyMenu.getItem(1);
+        intermediateLevelItem.addActionListener(e -> newGame(this.rows = 16, this.cols = 16, this.numberOfMines = 40));
+
+        JMenuItem expertLevelItem = difficultyMenu.getItem(2);
+        expertLevelItem.addActionListener(e -> newGame(this.rows = 16, this.cols = 30, this.numberOfMines = 99));
     }
 
     private void setButtonsListener(final int x, final int y) {
@@ -105,11 +120,13 @@ public class Game {
 
     private void openCell(final int x, final int y) {
         Cell cell = board.getCell(x, y);
+
         if (cell.isChecked() || cell.isFlagged()) {
             return;
         } else {
             cell.setChecked(true);
         }
+
         if (cell.isMined()) {
             buttons[x][y].setIcon(minedIcon);
             losingGame();
@@ -120,8 +137,19 @@ public class Game {
             buttons[x][y].setIcon(zeroIcon);
             openCellsAroundZero(cell);
         }
-        if (checkWinGame() == 10) {
+
+        if (checkWinGame() == numberOfMines) {
             winningGame();
+        }
+    }
+
+    private void openCellsAroundZero(final Cell openedCell) {
+        for (int x = board.makeValidCoordinate(openedCell.getX() - 1, cols);
+             x <= board.makeValidCoordinate(openedCell.getX() + 1, cols); x++) {
+            for (int y = board.makeValidCoordinate(openedCell.getY() - 1, rows);
+                 y <= board.makeValidCoordinate(openedCell.getY() + 1, rows); y++) {
+                openCell(x, y);
+            }
         }
     }
 
@@ -136,16 +164,6 @@ public class Game {
         return uncheckedCells;
     }
 
-    private void openCellsAroundZero(final Cell openedCell) {
-        for (int x = board.makeValidCoordinate(openedCell.getX() - 1, 9);
-             x <= board.makeValidCoordinate(openedCell.getX() + 1, 9); x++) {
-            for (int y = board.makeValidCoordinate(openedCell.getY() - 1, 9);
-                 y <= board.makeValidCoordinate(openedCell.getY() + 1, 9); y++) {
-                openCell(x, y);
-            }
-        }
-    }
-
     private void winningGame() {
         playing = false;
         gui.getSmileButton().setIcon(new ImageIcon(Gui.class.getResource("/icons/win_smile.png")));
@@ -154,8 +172,8 @@ public class Game {
     private void losingGame() {
         playing = false;
         gui.getSmileButton().setIcon(new ImageIcon(Gui.class.getResource("/icons/lose_smile.png")));
-        for (int x = 0; x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
+        for (int x = 0; x < cols; x++) {
+            for (int y = 0; y < rows; y++) {
                 Cell cell = board.getCell(x, y);
                 if (cell.isFlagged() && !cell.isMined()) {
                     buttons[x][y].setIcon(noMineIcon);

@@ -18,7 +18,7 @@ public class Board {
     }
 
     private Cell[][] getEmptyCells() {
-        Cell[][] cells = new Cell[rows][cols];
+        Cell[][] cells = new Cell[cols][rows];
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
                 cells[x][y] = new Cell(x, y);
@@ -53,12 +53,12 @@ public class Board {
     private int calcNeighbours(final Cell cell) {
         int neighbours = 0;
 
-        for (int i = makeValidCoordinate(cell.getX() - 1, cols);
-             i <= makeValidCoordinate(cell.getX() + 1, cols); i++) {
-            for (int j = makeValidCoordinate(cell.getY() - 1, rows);
-                 j <= makeValidCoordinate(cell.getY() + 1, rows); j++) {
-                if (i != cell.getX() || j != cell.getY()) {
-                    if (cells[i][j].isMined()) {
+        for (int x = makeValidCoordinate(cell.getX() - 1, cols);
+             x <= makeValidCoordinate(cell.getX() + 1, cols); x++) {
+            for (int y = makeValidCoordinate(cell.getY() - 1, rows);
+                 y <= makeValidCoordinate(cell.getY() + 1, rows); y++) {
+                if (x != cell.getX() || y != cell.getY()) {
+                    if (cells[x][y].isMined()) {
                         neighbours++;
                     }
                 }

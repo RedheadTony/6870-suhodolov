@@ -2,12 +2,12 @@ package ru.cft.focusstart.suhodolov;
 
 public class Board {
 
-    private int rows;
-    private int cols;
-    private int numberOfMines;
-    private Cell[][] cells;
+    private final int rows;
+    private final int cols;
+    private final int numberOfMines;
+    private final Cell[][] cells;
 
-    public Board(int rows, int cols, int numberOfMines) {
+    public Board(final int rows, final int cols, final int numberOfMines) {
         this.rows = rows;
         this.cols = cols;
         this.numberOfMines = numberOfMines;
@@ -50,7 +50,7 @@ public class Board {
         }
     }
 
-    private int calcNeighbours(Cell cell) {
+    private int calcNeighbours(final Cell cell) {
         int neighbours = 0;
 
         for (int i = makeValidCoordinate(cell.getX() - 1, cols);
@@ -67,15 +67,7 @@ public class Board {
         return neighbours;
     }
 
-    /**
-     * Метод, который проверяет на виладность координату x или y, и делает ее валидной если нужно
-     * Это вспомонательный метод для метода calcNeighbours
-     *
-     * @param num    координата x или y
-     * @param maxNum количество строк или столбцов, в зависимости от координаты
-     * @return валидную координату
-     */
-    public int makeValidCoordinate(int num, int maxNum) {
+    public int makeValidCoordinate(int num, final int maxNum) {
         if (num < 0) {
             num = 0;
         } else if (num > maxNum - 1) {
@@ -84,7 +76,7 @@ public class Board {
         return num;
     }
 
-    public Cell getCell(int x, int y) {
+    public Cell getCell(final int x, final int y) {
         return cells[x][y];
     }
 

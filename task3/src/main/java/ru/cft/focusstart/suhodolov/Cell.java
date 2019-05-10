@@ -2,19 +2,16 @@ package ru.cft.focusstart.suhodolov;
 
 public class Cell {
 
-
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     private boolean checked = false;
     private boolean mined = false;
     private boolean flagged = false;
 
-    private String state = "";
-
     private int surroundingMines = 0;
 
-    public Cell(int x, int y) {
+    public Cell(final int x, final int y) {
         this.x = x;
         this.y = y;
     }
@@ -49,14 +46,6 @@ public class Cell {
 
     public void setFlagged(boolean flagged) {
         this.flagged = flagged;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public int getSurroundingMines() {

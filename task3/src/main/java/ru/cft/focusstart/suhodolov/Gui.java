@@ -5,8 +5,10 @@ import java.awt.*;
 
 public class Gui extends JFrame {
 
+    public static final String BOMB_COUNTING_TEXT = "Bomb counting: ";
+    public static final String TIME_PASSED_TEXT = "Time passed: ";
+
     private JLabel minesLabel;
-    private int numberOfMines = 10;
 
     private JLabel timePassedLabel;
 
@@ -44,21 +46,32 @@ public class Gui extends JFrame {
         difficultyMenu.add(intermediateLevelItem);
         difficultyMenu.add(expertLevelItem);
 
+        JMenuItem beginnerLeaderBoardItem = new JMenuItem("Beginner");
+        JMenuItem intermediateLeaderBoardItem = new JMenuItem("Intermediate");
+        JMenuItem expertLeaderBoardItem = new JMenuItem("Expert");
+
+        JMenu leaderBoardMenu = new JMenu("LeaderBoard");
+        leaderBoardMenu.add(beginnerLeaderBoardItem);
+        leaderBoardMenu.add(intermediateLeaderBoardItem);
+        leaderBoardMenu.add(expertLeaderBoardItem);
+
         JMenuBar jMenuBar = new JMenuBar();
         jMenuBar.add(fileMenu);
         jMenuBar.add(difficultyMenu);
+        jMenuBar.add(leaderBoardMenu);
         setJMenuBar(jMenuBar);
 
         JPanel upperPanel = new JPanel();
         upperPanel.setLayout(new FlowLayout());
 
-        minesLabel = new JLabel("Осталось бомб: " + numberOfMines);
+        int numberOfMines = 10;
 
-        timePassedLabel = new JLabel("Время: 0");
+        minesLabel = new JLabel(BOMB_COUNTING_TEXT + numberOfMines);
+
+        timePassedLabel = new JLabel(TIME_PASSED_TEXT + 0);
 
         smileLabel = new JLabel();
         smileLabel.setPreferredSize(buttonPreferredSize);
-
 
         upperPanel.add(minesLabel);
         upperPanel.add(smileLabel);
@@ -75,8 +88,8 @@ public class Gui extends JFrame {
     public void changeDifficulty(final int rows, final int cols, final int numberOfMines) {
         buttons = new JButton[cols][rows];
         boardPanel.setLayout(new GridLayout(cols, rows));
-        minesLabel.setText("Осталось бомб: " + numberOfMines);
-        timePassedLabel.setText("Время: 0");
+        minesLabel.setText(BOMB_COUNTING_TEXT + numberOfMines);
+        timePassedLabel.setText(TIME_PASSED_TEXT + 0);
     }
 
     public void setBoardButton(final int x, final int y) {

@@ -4,22 +4,33 @@ import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 
 public class Game {
 
-    private final Icon closedIcon = new ImageIcon(Gui.class.getResource("/icons/closed.png"));
-    private final Icon minedIcon = new ImageIcon(Gui.class.getResource("/icons/mined.png"));
-    private final Icon zeroIcon = new ImageIcon(Gui.class.getResource("/icons/zero.png"));
-    private final Icon mineIcon = new ImageIcon(Gui.class.getResource("/icons/mine.png"));
-    private final Icon noMineIcon = new ImageIcon(Gui.class.getResource("/icons/no_mine.png"));
-    private final Icon flagIcon = new ImageIcon(Gui.class.getResource("/icons/flag.png"));
+    private final Icon playSmile = new ImageIcon(Game.class.getResource("/icons/play_smile.png"));
+    private final Icon winSmile = new ImageIcon(Game.class.getResource("/icons/win_smile.png"));
+    private final Icon loseSmile = new ImageIcon(Game.class.getResource("/icons/lose_smile.png"));
+    private final Icon closedIcon = new ImageIcon(Game.class.getResource("/icons/closed.png"));
+    private final Icon minedIcon = new ImageIcon(Game.class.getResource("/icons/mined.png"));
+    private final Icon zeroIcon = new ImageIcon(Game.class.getResource("/icons/zero.png"));
+    private final Icon mineIcon = new ImageIcon(Game.class.getResource("/icons/mine.png"));
+    private final Icon noMineIcon = new ImageIcon(Game.class.getResource("/icons/no_mine.png"));
+    private final Icon flagIcon = new ImageIcon(Game.class.getResource("/icons/flag.png"));
 
     private Gui gui;
     private Board board;
     private JButton[][] buttons;
 
+    private DifficultyType difficulty = DifficultyType.BEGINNER;
+
     private Timer timer;
     private int timePassed;
+
+    private Map<DifficultyType, List<Integer>> statistics = new HashMap<>();
 
     private boolean playing = false;
     private int rows = 9;
@@ -28,9 +39,14 @@ public class Game {
     private int notFoundedMines = numberOfMines;
 
     public Game() {
+        statistics.put(DifficultyType.BEGINNER, new ArrayList<>());
+        statistics.put(DifficultyType.INTERMEDIATE, new ArrayList<>());
+        statistics.put(DifficultyType.EXPERT, new ArrayList<>());
+
         this.gui = new Gui();
 
         setMenuListeners();
+
         gui.getSmileLabel().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -40,20 +56,19 @@ public class Game {
 
         timer = new Timer(1000, e -> {
             timePassed++;
-            gui.getTimePassedLabel().setText("Время: " + timePassed);
+            gui.getTimePassedLabel().setText(Gui.TIME_PASSED_TEXT + timePassed);
         });
 
         newGame(rows, cols, numberOfMines);
     }
 
     private void newGame(final int rows, final int cols, final int numberOfMines) {
-        gui.getSmileLabel().setIcon(new ImageIcon(Gui.class.getResource("/icons/play_smile.png")));
+        gui.getSmileLabel().setIcon(playSmile);
         gui.getBoardPanel().removeAll();
         gui.changeDifficulty(rows, cols, numberOfMines);
 
         notFoundedMines = numberOfMines;
         timePassed = 0;
-
 
         board = new Board(rows, cols, numberOfMines);
         buttons = gui.getButtons();
@@ -82,14 +97,38 @@ public class Game {
         exitItem.addActionListener(e -> System.exit(0));
 
         JMenu difficultyMenu = jMenuBar.getMenu(1);
+
         JMenuItem beginnerLevelItem = difficultyMenu.getItem(0);
-        beginnerLevelItem.addActionListener(e -> newGame(this.rows = 9, this.cols = 9, this.numberOfMines = 10));
+        beginnerLevelItem.addActionListener(e -> {
+            difficulty = DifficultyType.BEGINNER;
+            newGame(this.rows = 9, this.cols = 9, this.numberOfMines = 10);
+        });
 
         JMenuItem intermediateLevelItem = difficultyMenu.getItem(1);
-        intermediateLevelItem.addActionListener(e -> newGame(this.rows = 16, this.cols = 16, this.numberOfMines = 40));
+        intermediateLevelItem.addActionListener(e -> {
+            difficulty = DifficultyType.INTERMEDIATE;
+            newGame(this.rows = 16, this.cols = 16, this.numberOfMines = 40);
+        });
 
         JMenuItem expertLevelItem = difficultyMenu.getItem(2);
-        expertLevelItem.addActionListener(e -> newGame(this.rows = 16, this.cols = 30, this.numberOfMines = 99));
+        expertLevelItem.addActionListener(e -> {
+            difficulty = DifficultyType.EXPERT;
+            newGame(this.rows = 16, this.cols = 30, this.numberOfMines = 99);
+        });
+
+        JMenu leaderBoardMenu = jMenuBar.getMenu(2);
+
+        JMenuItem beginnerLeaderBoardItem = leaderBoardMenu.getItem(0);
+        beginnerLeaderBoardItem.addActionListener(e ->
+                new LeaderBoard(DifficultyType.BEGINNER, statistics.get(DifficultyType.BEGINNER)));
+
+        JMenuItem intermediateLeaderBoardItem = leaderBoardMenu.getItem(1);
+        intermediateLeaderBoardItem.addActionListener(e ->
+                new LeaderBoard(DifficultyType.INTERMEDIATE, statistics.get(DifficultyType.INTERMEDIATE)));
+
+        JMenuItem expertLeaderBoardItem = leaderBoardMenu.getItem(2);
+        expertLeaderBoardItem.addActionListener(e ->
+                new LeaderBoard(DifficultyType.EXPERT, statistics.get(DifficultyType.EXPERT)));
     }
 
     private void setButtonsListener(final int x, final int y) {
@@ -118,12 +157,12 @@ public class Game {
                         buttons[x][y].setIcon(flagIcon);
                         cell.setFlagged(true);
                         notFoundedMines--;
-                        gui.getMinesLabel().setText("Осталось бомб: " + notFoundedMines);
+                        gui.getMinesLabel().setText(Gui.BOMB_COUNTING_TEXT + notFoundedMines);
                     } else {
                         buttons[x][y].setIcon(closedIcon);
                         cell.setFlagged(false);
                         notFoundedMines++;
-                        gui.getMinesLabel().setText("Осталось бомб: " + notFoundedMines);
+                        gui.getMinesLabel().setText(Gui.BOMB_COUNTING_TEXT + notFoundedMines);
                     }
                 }
             }
@@ -176,7 +215,7 @@ public class Game {
             buttons[x][y].setIcon(minedIcon);
             losingGame();
         } else if (cell.getSurroundingMines() > 0) {
-            buttons[x][y].setIcon(new ImageIcon(Gui.class.getResource(
+            buttons[x][y].setIcon(new ImageIcon(Game.class.getResource(
                     "/icons/num" + cell.getSurroundingMines() + ".png")));
         } else {
             buttons[x][y].setIcon(zeroIcon);
@@ -212,13 +251,16 @@ public class Game {
     private void winningGame() {
         timer.stop();
         playing = false;
-        gui.getSmileLabel().setIcon(new ImageIcon(Gui.class.getResource("/icons/win_smile.png")));
+        gui.getSmileLabel().setIcon(winSmile);
+
+        statistics.get(difficulty).add(timePassed);
+        statistics.get(difficulty).sort(Integer::compareTo);
     }
 
     private void losingGame() {
         timer.stop();
         playing = false;
-        gui.getSmileLabel().setIcon(new ImageIcon(Gui.class.getResource("/icons/lose_smile.png")));
+        gui.getSmileLabel().setIcon(loseSmile);
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
                 Cell cell = board.getCell(x, y);

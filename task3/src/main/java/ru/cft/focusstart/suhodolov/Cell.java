@@ -28,7 +28,7 @@ public class Cell {
         return checked;
     }
 
-    public void setChecked(boolean checked) {
+    public void setChecked(final boolean checked) {
         this.checked = checked;
     }
 
@@ -36,7 +36,7 @@ public class Cell {
         return mined;
     }
 
-    public void setMined(boolean mined) {
+    public void setMined(final boolean mined) {
         this.mined = mined;
     }
 
@@ -44,7 +44,7 @@ public class Cell {
         return flagged;
     }
 
-    public void setFlagged(boolean flagged) {
+    public void setFlagged(final boolean flagged) {
         this.flagged = flagged;
     }
 
@@ -52,7 +52,7 @@ public class Cell {
         return surroundingMines;
     }
 
-    public void setSurroundingMines(int surroundingMines) {
+    public void setSurroundingMines(final int surroundingMines) {
         this.surroundingMines = surroundingMines;
     }
 }

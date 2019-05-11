@@ -21,7 +21,7 @@ public class LeaderBoard extends JFrame {
             jPanel.add(jLabel);
         } else {
             for (int i = 1; i < results.size() + 1; i++) {
-                JLabel jLabel = new JLabel(i + " place: " + results.get(i - 1));
+                JLabel jLabel = new JLabel(i + " place: " + results.get(i - 1) + " sec.");
                 jPanel.add(jLabel);
             }
             jPanel.setLayout(new GridLayout(results.size(), 1));

@@ -1,6 +1,7 @@
 package ru.cft.focusstart.suhodolov;
 
 import javax.swing.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -17,25 +18,42 @@ public class Game {
     private Board board;
     private JButton[][] buttons;
 
+    private Timer timer;
+    private int timePassed;
+
     private boolean playing = false;
     private int rows = 9;
     private int cols = 9;
     private int numberOfMines = 10;
+    private int notFoundedMines = numberOfMines;
 
     public Game() {
         this.gui = new Gui();
 
         setMenuListeners();
-        gui.getSmileButton().addActionListener(e -> newGame(rows, cols, numberOfMines));
-        gui.getSmileButton().setIcon(new ImageIcon(Gui.class.getResource("/icons/play_smile.png")));
+        gui.getSmileLabel().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                newGame(rows, cols, numberOfMines);
+            }
+        });
+
+        timer = new Timer(1000, e -> {
+            timePassed++;
+            gui.getTimePassedLabel().setText("Время: " + timePassed);
+        });
 
         newGame(rows, cols, numberOfMines);
     }
 
     private void newGame(final int rows, final int cols, final int numberOfMines) {
+        gui.getSmileLabel().setIcon(new ImageIcon(Gui.class.getResource("/icons/play_smile.png")));
         gui.getBoardPanel().removeAll();
-        gui.getBoardPanel().invalidate();
-        gui.changeDifficulty(rows, cols);
+        gui.changeDifficulty(rows, cols, numberOfMines);
+
+        notFoundedMines = numberOfMines;
+        timePassed = 0;
+
 
         board = new Board(rows, cols, numberOfMines);
         buttons = gui.getButtons();
@@ -46,7 +64,6 @@ public class Game {
                 gui.getBoardPanel().add(buttons[x][y]);
             }
         }
-        gui.getBoardPanel().validate();
         playing = true;
 
         gui.pack();
@@ -82,6 +99,9 @@ public class Game {
                 if (!playing) {
                     return;
                 }
+                if (!timer.isRunning()) {
+                    timer.start();
+                }
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if (board.getCell(x, y).isChecked()) {
                         openCellAroundFlags(x, y);
@@ -97,9 +117,13 @@ public class Game {
                     if (!cell.isFlagged()) {
                         buttons[x][y].setIcon(flagIcon);
                         cell.setFlagged(true);
+                        notFoundedMines--;
+                        gui.getMinesLabel().setText("Осталось бомб: " + notFoundedMines);
                     } else {
                         buttons[x][y].setIcon(closedIcon);
                         cell.setFlagged(false);
+                        notFoundedMines++;
+                        gui.getMinesLabel().setText("Осталось бомб: " + notFoundedMines);
                     }
                 }
             }
@@ -186,13 +210,15 @@ public class Game {
     }
 
     private void winningGame() {
+        timer.stop();
         playing = false;
-        gui.getSmileButton().setIcon(new ImageIcon(Gui.class.getResource("/icons/win_smile.png")));
+        gui.getSmileLabel().setIcon(new ImageIcon(Gui.class.getResource("/icons/win_smile.png")));
     }
 
     private void losingGame() {
+        timer.stop();
         playing = false;
-        gui.getSmileButton().setIcon(new ImageIcon(Gui.class.getResource("/icons/lose_smile.png")));
+        gui.getSmileLabel().setIcon(new ImageIcon(Gui.class.getResource("/icons/lose_smile.png")));
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
                 Cell cell = board.getCell(x, y);

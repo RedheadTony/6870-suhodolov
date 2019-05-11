@@ -5,9 +5,14 @@ import java.awt.*;
 
 public class Gui extends JFrame {
 
+    private JLabel minesLabel;
+    private int numberOfMines = 10;
+
+    private JLabel timePassedLabel;
+
     private final Dimension buttonPreferredSize = new Dimension(50, 50);
 
-    private JButton smileButton;
+    private JLabel smileLabel;
     private JPanel boardPanel;
 
     private int cols = 9;
@@ -44,15 +49,22 @@ public class Gui extends JFrame {
         jMenuBar.add(difficultyMenu);
         setJMenuBar(jMenuBar);
 
-        JPanel smilePanel = new JPanel();
-        smilePanel.setLayout(new GroupLayout(smilePanel));
+        JPanel upperPanel = new JPanel();
+        upperPanel.setLayout(new FlowLayout());
 
-        smileButton = new JButton();
-        smileButton.setPreferredSize(buttonPreferredSize);
+        minesLabel = new JLabel("Осталось бомб: " + numberOfMines);
 
-        smilePanel.add(smileButton);
+        timePassedLabel = new JLabel("Время: 0");
 
-        add(smileButton, BorderLayout.NORTH);
+        smileLabel = new JLabel();
+        smileLabel.setPreferredSize(buttonPreferredSize);
+
+
+        upperPanel.add(minesLabel);
+        upperPanel.add(smileLabel);
+        upperPanel.add(timePassedLabel);
+
+        add(upperPanel, BorderLayout.NORTH);
 
         boardPanel = new JPanel();
 
@@ -60,9 +72,11 @@ public class Gui extends JFrame {
         add(boardPanel, BorderLayout.CENTER);
     }
 
-    public void changeDifficulty(final int rows, final int cols) {
+    public void changeDifficulty(final int rows, final int cols, final int numberOfMines) {
         buttons = new JButton[cols][rows];
         boardPanel.setLayout(new GridLayout(cols, rows));
+        minesLabel.setText("Осталось бомб: " + numberOfMines);
+        timePassedLabel.setText("Время: 0");
     }
 
     public void setBoardButton(final int x, final int y) {
@@ -71,8 +85,16 @@ public class Gui extends JFrame {
         buttons[x][y].setPreferredSize(buttonPreferredSize);
     }
 
-    public JButton getSmileButton() {
-        return smileButton;
+    public JLabel getSmileLabel() {
+        return smileLabel;
+    }
+
+    public JLabel getMinesLabel() {
+        return minesLabel;
+    }
+
+    public JLabel getTimePassedLabel() {
+        return timePassedLabel;
     }
 
     public JPanel getBoardPanel() {

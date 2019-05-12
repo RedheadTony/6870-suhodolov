@@ -214,6 +214,7 @@ public class Game {
         if (cell.isMined()) {
             buttons[x][y].setIcon(minedIcon);
             losingGame();
+            return;
         } else if (cell.getSurroundingMines() > 0) {
             buttons[x][y].setIcon(new ImageIcon(Game.class.getResource(
                     "/icons/num" + cell.getSurroundingMines() + ".png")));

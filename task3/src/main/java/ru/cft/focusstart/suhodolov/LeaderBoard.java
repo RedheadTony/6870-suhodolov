@@ -4,8 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * Класс, который представляет собой фрейм, который показывает таблицу рекордов нужной сложности
+ */
 public class LeaderBoard extends JFrame {
 
+    /**
+     * Конструктор, который создает фрейм
+     *
+     * @param difficultyType сложность, таблицу рекордов которой нужно показать
+     * @param results        список результатов побед на переданной сложности
+     */
     public LeaderBoard(final DifficultyType difficultyType, final List<Integer> results) {
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setTitle(difficultyType.name() + " LeaderBoard");

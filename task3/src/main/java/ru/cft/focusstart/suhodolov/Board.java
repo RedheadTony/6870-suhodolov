@@ -1,22 +1,35 @@
 package ru.cft.focusstart.suhodolov;
 
+/**
+ * Класс, который представляет собой игровое поле со всеми ячейками
+ */
 public class Board {
 
     private final int rows;
     private final int cols;
-    private final int numberOfMines;
     private final Cell[][] cells;
 
+    /**
+     * Конструктор, который через входные параметры создает игровое поле
+     *
+     * @param rows          количество строк
+     * @param cols          количество колонок
+     * @param numberOfMines количество мин
+     */
     public Board(final int rows, final int cols, final int numberOfMines) {
         this.rows = rows;
         this.cols = cols;
-        this.numberOfMines = numberOfMines;
         this.cells = getEmptyCells();
 
-        setMines();
-        setNeighboursNumber();
+        setMines(numberOfMines);
+        setNeighboursNumber(rows, cols);
     }
 
+    /**
+     * Метод, который инициализирует массив пустых ячеек и возвращает его
+     *
+     * @return двумерный массив ячеек cells
+     */
     private Cell[][] getEmptyCells() {
         Cell[][] cells = new Cell[cols][rows];
         for (int x = 0; x < cols; x++) {
@@ -27,7 +40,12 @@ public class Board {
         return cells;
     }
 
-    private void setMines() {
+    /**
+     * Метод, который расставляет мины на случайных ячеек
+     *
+     * @param numberOfMines количество мин, которое нужно расставить
+     */
+    private void setMines(final int numberOfMines) {
         int x, y;
         int currentMines = 0;
 
@@ -42,7 +60,13 @@ public class Board {
         }
     }
 
-    private void setNeighboursNumber() {
+    /**
+     * Метод, который ждя каждой ячейки вычисляет количество мин по соседству
+     *
+     * @param rows количество строк
+     * @param cols количество колонок
+     */
+    private void setNeighboursNumber(final int rows, final int cols) {
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
                 cells[x][y].setSurroundingMines(calcNeighbours(cells[x][y]));
@@ -50,6 +74,12 @@ public class Board {
         }
     }
 
+    /**
+     * Метод, который вычисляет вычисляет для переданной ячейки количество мин по соседству
+     *
+     * @param cell ячейка
+     * @return количество мин по соседству
+     */
     private int calcNeighbours(final Cell cell) {
         int neighbours = 0;
 
@@ -67,6 +97,13 @@ public class Board {
         return neighbours;
     }
 
+    /**
+     * Статический вспомогательный метод, который переданную координату делает валидной для поля
+     *
+     * @param num    координата
+     * @param maxNum максимальное число, которое эта координата не может привышать
+     * @return
+     */
     public static int makeValidCoordinate(int num, final int maxNum) {
         if (num < 0) {
             num = 0;
@@ -76,10 +113,22 @@ public class Board {
         return num;
     }
 
+    /**
+     * Геттер для ячейки, который возвращает ее по переданным координатам
+     *
+     * @param x координата
+     * @param y координата
+     * @return ячейка из массива cells
+     */
     public Cell getCell(final int x, final int y) {
         return cells[x][y];
     }
 
+    /**
+     * Геттер для двумерного массива ячеек
+     *
+     * @return массив ячеек cells
+     */
     public Cell[][] getCells() {
         return cells;
     }

@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+/**
+ * Основной класс, в котором происходит всё взаимодействие с действиями пользователя
+ */
 public class Game {
 
     private final Icon playSmile = new ImageIcon(Game.class.getResource("/icons/play_smile.png"));
@@ -38,6 +41,12 @@ public class Game {
     private int numberOfMines = 10;
     private int notFoundedMines = numberOfMines;
 
+    /**
+     * Конструктор, который инициализирует нужные пары ключ-значения для мапы statistics
+     * инициализирует Gui, Timer
+     * создает Listeners для меню и smileLabel
+     * запускает новую игру
+     */
     public Game() {
         statistics.put(DifficultyType.BEGINNER, new ArrayList<>());
         statistics.put(DifficultyType.INTERMEDIATE, new ArrayList<>());
@@ -62,6 +71,13 @@ public class Game {
         newGame(rows, cols, numberOfMines);
     }
 
+    /**
+     * Метод, который по входным параметрам начинает новую игру нужной сложности обновляя всё поле
+     *
+     * @param rows          количество строк ячеек игры
+     * @param cols          количество колонок ячеек игры
+     * @param numberOfMines количество мин
+     */
     private void newGame(final int rows, final int cols, final int numberOfMines) {
         gui.getSmileLabel().setIcon(playSmile);
         gui.getBoardPanel().removeAll();
@@ -75,7 +91,7 @@ public class Game {
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
                 gui.setBoardButton(x, y);
-                setButtonsListener(x, y);
+                setButtonListener(x, y);
                 gui.getBoardPanel().add(buttons[x][y]);
             }
         }
@@ -86,6 +102,9 @@ public class Game {
         gui.setLocationRelativeTo(null);
     }
 
+    /**
+     * Метод, который добавляет ActionListeners для пунктов меню, доставая эти пункты у Gui по индексам
+     */
     private void setMenuListeners() {
         JMenuBar jMenuBar = gui.getJMenuBar();
         JMenu fileMenu = jMenuBar.getMenu(0);
@@ -131,7 +150,13 @@ public class Game {
                 new LeaderBoard(DifficultyType.EXPERT, statistics.get(DifficultyType.EXPERT)));
     }
 
-    private void setButtonsListener(final int x, final int y) {
+    /**
+     * Метод, который добавляет MouseListeners для кнопки по переданным координатам
+     *
+     * @param x координата
+     * @param y координата
+     */
+    private void setButtonListener(final int x, final int y) {
         buttons[x][y].addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -185,6 +210,13 @@ public class Game {
         });
     }
 
+    /**
+     * Метод, который по переданным координатам открывает вокруг ячейки,
+     * у которой рядом находится такое же количество мин, сколько и флагов, другие закрытые ячейки
+     *
+     * @param x координата
+     * @param y координата
+     */
     private void openCellAroundFlags(final int x, final int y) {
         Cell cell = board.getCell(x, y);
         int surroundingFlags = 0;
@@ -202,6 +234,12 @@ public class Game {
         }
     }
 
+    /**
+     * Метод, который по переданным координатам открывает ячейку
+     *
+     * @param x координата
+     * @param y координата
+     */
     private void openCell(final int x, final int y) {
         Cell cell = board.getCell(x, y);
 
@@ -223,11 +261,16 @@ public class Game {
             openCellsAroundZero(cell);
         }
 
-        if (checkWinGame() == numberOfMines) {
+        if (checkWinGame()) {
             winningGame();
         }
     }
 
+    /**
+     * Метод, который открывает ячейки вокруг открытой пустой переданной ячейки
+     *
+     * @param openedCell открытая пустая ячейка
+     */
     private void openCellsAroundZero(final Cell openedCell) {
         for (int x = Board.makeValidCoordinate(openedCell.getX() - 1, cols);
              x <= Board.makeValidCoordinate(openedCell.getX() + 1, cols); x++) {
@@ -238,7 +281,12 @@ public class Game {
         }
     }
 
-    private int checkWinGame() {
+    /**
+     * Метод, который проверяет, выиграл ли пользователь игру
+     *
+     * @return true, если пользователь выиграл, false, если нет
+     */
+    private boolean checkWinGame() {
         int uncheckedCells = 0;
         for (Cell[] cells : board.getCells())
             for (Cell cell : cells) {
@@ -246,9 +294,15 @@ public class Game {
                     uncheckedCells++;
                 }
             }
-        return uncheckedCells;
+        return uncheckedCells == numberOfMines;
     }
 
+    /**
+     * Метод, который вызывается, когда игра выиграна
+     * останавливает таймер и игру
+     * меняет иконку smileLabel на ту, что показывает победу
+     * добавляет время, которое пользователь потратил на игру в статистику и сразу же ее сортирует
+     */
     private void winningGame() {
         timer.stop();
         playing = false;
@@ -258,6 +312,12 @@ public class Game {
         statistics.get(difficulty).sort(Integer::compareTo);
     }
 
+    /**
+     * Метод, который вызывается, когда игра проиграна
+     * останавливает таймер и игру
+     * меняет иконку smileLabel на ту, что показывает проигрыш
+     * открывает ячейки с минами
+     */
     private void losingGame() {
         timer.stop();
         playing = false;

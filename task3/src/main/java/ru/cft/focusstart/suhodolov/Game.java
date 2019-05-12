@@ -21,16 +21,16 @@ public class Game {
     private final Icon noMineIcon = new ImageIcon(Game.class.getResource("/icons/no_mine.png"));
     private final Icon flagIcon = new ImageIcon(Game.class.getResource("/icons/flag.png"));
 
-    private Gui gui;
+    private final Gui gui;
     private Board board;
     private JButton[][] buttons;
 
     private DifficultyType difficulty = DifficultyType.BEGINNER;
 
-    private Timer timer;
+    private final Timer timer;
     private int timePassed;
 
-    private Map<DifficultyType, List<Integer>> statistics = new HashMap<>();
+    private final Map<DifficultyType, List<Integer>> statistics = new HashMap<>();
 
     private boolean playing = false;
     private int rows = 9;

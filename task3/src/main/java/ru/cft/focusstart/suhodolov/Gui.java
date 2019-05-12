@@ -8,14 +8,14 @@ public class Gui extends JFrame {
     public static final String BOMB_COUNTING_TEXT = "Bomb counting: ";
     public static final String TIME_PASSED_TEXT = "Time passed: ";
 
-    private JLabel minesLabel;
+    private final JLabel minesLabel;
 
-    private JLabel timePassedLabel;
+    private final JLabel timePassedLabel;
 
     private final Dimension buttonPreferredSize = new Dimension(50, 50);
 
-    private JLabel smileLabel;
-    private JPanel boardPanel;
+    private final JLabel smileLabel;
+    private final JPanel boardPanel;
 
     private int cols = 9;
     private int rows = 9;

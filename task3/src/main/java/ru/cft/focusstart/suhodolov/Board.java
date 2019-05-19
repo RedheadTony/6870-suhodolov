@@ -102,7 +102,7 @@ public class Board {
      *
      * @param num    координата
      * @param maxNum максимальное число, которое эта координата не может привышать
-     * @return
+     * @return валидная координата
      */
     public static int makeValidCoordinate(int num, final int maxNum) {
         if (num < 0) {

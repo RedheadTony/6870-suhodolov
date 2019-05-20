@@ -1,4 +1,4 @@
-package ru.cft.focusstart.suhodolov;
+package ru.cft.focusstart.suhodolov.model;
 
 /**
  * Класс, который представляет собой игровую ячейку

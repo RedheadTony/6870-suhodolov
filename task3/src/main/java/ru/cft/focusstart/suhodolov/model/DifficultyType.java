@@ -1,4 +1,4 @@
-package ru.cft.focusstart.suhodolov;
+package ru.cft.focusstart.suhodolov.model;
 
 /**
  * Перечисление, в котором хранятся типы сложности игры

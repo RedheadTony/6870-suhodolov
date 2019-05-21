@@ -5,5 +5,10 @@ package ru.cft.focusstart.suhodolov.observers;
  */
 public interface TimerObserver {
 
+    /**
+     * Метод, который будет вызываться, когда таймер будет меняться
+     *
+     * @param timePassed число, которое показывает сколько времени с начала игры прошло
+     */
     void onTimerChange(int timePassed);
 }

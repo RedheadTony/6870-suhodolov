@@ -9,7 +9,18 @@ import java.util.List;
  */
 public interface CellObserver {
 
+    /**
+     * Метод, который будет вызываться, когда модель изменит ячейки
+     *
+     * @param changedCells список измененных ячеек
+     */
     void onCellsChanged(List<Cell> changedCells);
 
+    /**
+     * Метод, который будет вызываться, когда модель изменит флаги на какой-то ячейке
+     *
+     * @param cell            ячейка, с которой манипулирует пользователь
+     * @param notFoundedMines количество ненайденных мин
+     */
     void onFlagChanged(Cell cell, int notFoundedMines);
 }

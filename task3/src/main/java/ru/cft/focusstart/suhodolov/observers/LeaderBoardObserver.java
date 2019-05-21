@@ -7,5 +7,11 @@ import ru.cft.focusstart.suhodolov.model.DifficultyType;
  */
 public interface LeaderBoardObserver {
 
+    /**
+     * Метод, который будет вызываться, когда модель решит записать новый результат в таблицу рекордов
+     *
+     * @param difficulty сложность, на которой пользователь получил этот результат
+     * @param timePassed результат, то время за которое пользователь прошел игру
+     */
     void onLeadersListChange(DifficultyType difficulty, int timePassed);
 }

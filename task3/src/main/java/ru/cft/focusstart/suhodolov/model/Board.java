@@ -12,16 +12,14 @@ public class Board {
     /**
      * Конструктор, который через входные параметры создает игровое поле
      *
-     * @param rows          количество строк
-     * @param cols          количество колонок
-     * @param numberOfMines количество мин
+     * @param difficulty сложность игры
      */
-    public Board(final int rows, final int cols, final int numberOfMines) {
-        this.rows = rows;
-        this.cols = cols;
+    public Board(final DifficultyType difficulty) {
+        this.rows = difficulty.getRows();
+        this.cols = difficulty.getCols();
         this.cells = getEmptyCells();
 
-        setMines(numberOfMines);
+        setMines(difficulty.getNumberOfMines());
         setNeighboursNumber(rows, cols);
     }
 

@@ -52,25 +52,26 @@ public class Game {
             timerObserver.onTimerChange(timePassed);
         });
 
-        newGame(rows, cols, numberOfMines);
+        newGame(difficulty);
     }
 
     /**
-     * Метод, который по входным параметрам начинает новую игру нужной сложности и сообщает об этом обсерверу
+     * Метод, который по входныму параметру начинает новую игру нужной сложности и сообщает об этом обсерверу
      *
-     * @param rows          количество строк ячеек игры
-     * @param cols          количество колонок ячеек игры
-     * @param numberOfMines количество мин
+     * @param difficulty сложность новой игры
      */
-    private void newGame(final int rows, final int cols, final int numberOfMines) {
+    private void newGame(final DifficultyType difficulty) {
         changedCells = new ArrayList<>();
 
-        notFoundedMines = numberOfMines;
+        rows = difficulty.getRows();
+        cols = difficulty.getCols();
+        notFoundedMines = difficulty.getNumberOfMines();
+
         timePassed = 0;
 
-        gameStateObserver.onNewGame(rows, cols, numberOfMines);
+        gameStateObserver.onNewGame(difficulty);
 
-        board = new Board(rows, cols, numberOfMines);
+        board = new Board(difficulty);
 
         playing = true;
     }
@@ -80,22 +81,9 @@ public class Game {
      *
      * @param difficulty сложность игры
      */
-    public void changeDifficulty(DifficultyType difficulty) {
+    public void setDifficulty(DifficultyType difficulty) {
         this.difficulty = difficulty;
-        switch (difficulty) {
-            case BEGINNER: {
-                newGame(9, 9, 10);
-                break;
-            }
-            case INTERMEDIATE: {
-                newGame(16, 16, 40);
-                break;
-            }
-            case EXPERT: {
-                newGame(16, 30, 99);
-                break;
-            }
-        }
+        newGame(difficulty);
     }
 
     /**
@@ -233,7 +221,7 @@ public class Game {
                     uncheckedCells++;
                 }
             }
-        return uncheckedCells == numberOfMines;
+        return uncheckedCells ==difficulty.getNumberOfMines();
     }
 
     /**

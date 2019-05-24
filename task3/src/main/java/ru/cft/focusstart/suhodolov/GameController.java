@@ -26,7 +26,7 @@ public class GameController {
         Gui gui = new Gui();
         LeaderBoard leaderBoard = new LeaderBoard();
 
-        this.game = new Game(gui, gui, gui, leaderBoard);
+        game = new Game(gui, gui, gui, leaderBoard);
 
         setMenuListeners(gui, leaderBoard);
         setButtonsListener(gui);
@@ -34,7 +34,7 @@ public class GameController {
         gui.getSmileLabel().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                game.changeDifficulty(difficulty);
+                game.setDifficulty(difficulty);
                 setButtonsListener(gui);
             }
         });
@@ -52,7 +52,7 @@ public class GameController {
 
         JMenuItem newGameItem = fileMenu.getItem(0);
         newGameItem.addActionListener(e -> {
-            game.changeDifficulty(difficulty);
+            game.setDifficulty(difficulty);
             setButtonsListener(gui);
         });
 
@@ -61,21 +61,21 @@ public class GameController {
         JMenuItem beginnerLevelItem = difficultyMenu.getItem(0);
         beginnerLevelItem.addActionListener(e -> {
             difficulty = DifficultyType.BEGINNER;
-            game.changeDifficulty(difficulty);
+            game.setDifficulty(difficulty);
             setButtonsListener(gui);
         });
 
         JMenuItem intermediateLevelItem = difficultyMenu.getItem(1);
         intermediateLevelItem.addActionListener(e -> {
             difficulty = DifficultyType.INTERMEDIATE;
-            game.changeDifficulty(difficulty);
+            game.setDifficulty(difficulty);
             setButtonsListener(gui);
         });
 
         JMenuItem expertLevelItem = difficultyMenu.getItem(2);
         expertLevelItem.addActionListener(e -> {
             difficulty = DifficultyType.EXPERT;
-            game.changeDifficulty(difficulty);
+            game.setDifficulty(difficulty);
             setButtonsListener(gui);
         });
 

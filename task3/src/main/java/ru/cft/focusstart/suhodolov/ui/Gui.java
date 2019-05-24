@@ -2,6 +2,7 @@ package ru.cft.focusstart.suhodolov.ui;
 
 import ru.cft.focusstart.suhodolov.model.Board;
 import ru.cft.focusstart.suhodolov.model.Cell;
+import ru.cft.focusstart.suhodolov.model.DifficultyType;
 import ru.cft.focusstart.suhodolov.model.Game;
 import ru.cft.focusstart.suhodolov.observers.CellObserver;
 import ru.cft.focusstart.suhodolov.observers.GameStateObserver;
@@ -185,21 +186,19 @@ public class Gui extends JFrame implements CellObserver, TimerObserver, GameStat
      * Имплементированный метод из GameStateObserver
      * меняет панель фрейма для новой игры по переданным значениям
      *
-     * @param rows          количество строк в новой игре
-     * @param cols          количество столбцов в новой игре
-     * @param numberOfMines количество мин в новой игре
+     * @param difficulty сложность новой игры
      */
     @Override
-    public void onNewGame(final int rows, final int cols, final int numberOfMines) {
-        this.rows = rows;
-        this.cols = cols;
+    public void onNewGame(final DifficultyType difficulty) {
+        this.rows = difficulty.getRows();
+        this.cols = difficulty.getCols();
 
         smileLabel.setIcon(playSmile);
 
         boardPanel.removeAll();
 
         boardPanel.setLayout(new GridLayout(cols, rows));
-        minesLabel.setText(BOMB_COUNTING_TEXT + numberOfMines);
+        minesLabel.setText(BOMB_COUNTING_TEXT + difficulty.getNumberOfMines());
         timePassedLabel.setText(TIME_PASSED_TEXT + 0);
 
         buttons = new JButton[cols][rows];

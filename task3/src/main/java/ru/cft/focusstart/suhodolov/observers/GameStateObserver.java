@@ -1,6 +1,7 @@
 package ru.cft.focusstart.suhodolov.observers;
 
 import ru.cft.focusstart.suhodolov.model.Board;
+import ru.cft.focusstart.suhodolov.model.DifficultyType;
 
 /**
  * Интерфейс обсервера, который следит за состоянием игры
@@ -10,11 +11,9 @@ public interface GameStateObserver {
     /**
      * Метод, который будет вызываться, когда начнется новая игра
      *
-     * @param rows          количество строк в новой игре
-     * @param cols          количество столбцов в новой игре
-     * @param numberOfMines количество мин в новой игре
+     * @param difficulty сложность игры
      */
-    void onNewGame(int rows, int cols, int numberOfMines);
+    void onNewGame(DifficultyType difficulty);
 
     /**
      * Метод, который будет вызываться, когда пользователь выиграет

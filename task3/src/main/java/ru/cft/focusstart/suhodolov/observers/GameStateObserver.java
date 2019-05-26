@@ -1,6 +1,6 @@
 package ru.cft.focusstart.suhodolov.observers;
 
-import ru.cft.focusstart.suhodolov.model.Board;
+import ru.cft.focusstart.suhodolov.model.Cell;
 import ru.cft.focusstart.suhodolov.model.DifficultyType;
 
 /**
@@ -25,5 +25,5 @@ public interface GameStateObserver {
      *
      * @param board поле игры
      */
-    void onLose(Board board);
+    void onLose(Cell[][] board);
 }

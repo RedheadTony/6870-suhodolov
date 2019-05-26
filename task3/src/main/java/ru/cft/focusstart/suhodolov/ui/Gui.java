@@ -1,6 +1,5 @@
 package ru.cft.focusstart.suhodolov.ui;
 
-import ru.cft.focusstart.suhodolov.model.Board;
 import ru.cft.focusstart.suhodolov.model.Cell;
 import ru.cft.focusstart.suhodolov.model.DifficultyType;
 import ru.cft.focusstart.suhodolov.model.Game;
@@ -231,12 +230,12 @@ public class Gui extends JFrame implements CellObserver, TimerObserver, GameStat
      * @param board поле игры
      */
     @Override
-    public void onLose(final Board board) {
+    public void onLose(final Cell[][] board) {
         smileLabel.setIcon(loseSmile);
 
         for (int x = 0; x < cols; x++) {
             for (int y = 0; y < rows; y++) {
-                Cell cell = board.getCell(x, y);
+                Cell cell = board[x][y];
                 if (cell.isFlagged() && !cell.isMined()) {
                     buttons[x][y].setIcon(noMineIcon);
                 }

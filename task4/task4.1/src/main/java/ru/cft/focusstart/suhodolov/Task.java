@@ -1,3 +1,5 @@
+package ru.cft.focusstart.suhodolov;
+
 import java.util.function.Supplier;
 
 public class Task implements Supplier<Long> {

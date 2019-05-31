@@ -23,7 +23,7 @@ public class Application {
             try {
                 result += future.get();
             } catch (InterruptedException e) {
-                System.out.println("Occupied thread was interrupted");
+                System.out.println("Occupied thread has been interrupted");
             } catch (ExecutionException e) {
                 System.out.println("Task aborted. Can't retrieve the result.");
             }

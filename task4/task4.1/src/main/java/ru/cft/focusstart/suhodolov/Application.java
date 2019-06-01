@@ -6,7 +6,7 @@ import java.util.concurrent.*;
 
 public class Application {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         int threadsCount = 10;
         int step = 10_000_000 / threadsCount;
 

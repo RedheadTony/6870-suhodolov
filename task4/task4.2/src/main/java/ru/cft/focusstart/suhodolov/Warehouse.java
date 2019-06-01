@@ -14,7 +14,7 @@ public class Warehouse {
     private static final String THREAD_NOTIFY_ACTION = "возобновляет работу";
 
     private final int size;
-    private volatile List<Resource> resources = new ArrayList<>();
+    private List<Resource> resources = new ArrayList<>();
 
     public Warehouse(final int size) {
         this.size = size;

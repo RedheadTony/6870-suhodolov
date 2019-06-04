@@ -5,24 +5,23 @@ import java.util.concurrent.Executors;
 
 public class Application {
 
+    private static final int WAREHOUSE_SIZE = 10;
+    private static final int PRODUCER_COUNT = 5;
+    private static final int PRODUCER_DELAY_TIME = 2000;
+    private static final int CONSUMER_COUNT = 5;
+    private static final int CONSUMER_DELAY_TIME = 1000;
+
     public static void main(String[] args) {
-        int warehouseSize = 10;
-        Warehouse warehouse = new Warehouse(warehouseSize);
+        Warehouse warehouse = new Warehouse(WAREHOUSE_SIZE);
 
-        int producerCount = 5;
-        int producerDelayTime = 2000;
-
-        ExecutorService producers = Executors.newFixedThreadPool(producerCount);
-        for (int i = 0; i < producerCount; i++) {
-            producers.submit(new Producer(warehouse, i, producerDelayTime));
+        ExecutorService producers = Executors.newFixedThreadPool(PRODUCER_COUNT);
+        for (int i = 0; i < PRODUCER_COUNT; i++) {
+            producers.submit(new Producer(warehouse, i, PRODUCER_DELAY_TIME));
         }
 
-        int consumerCount = 5;
-        int consumerDelayTime = 1000;
-
-        ExecutorService consumers = Executors.newFixedThreadPool(consumerCount);
-        for (int i = 0; i < consumerCount; i++) {
-            consumers.submit(new Consumer(warehouse, i, consumerDelayTime));
+        ExecutorService consumers = Executors.newFixedThreadPool(CONSUMER_COUNT);
+        for (int i = 0; i < CONSUMER_COUNT; i++) {
+            consumers.submit(new Consumer(warehouse, i, CONSUMER_DELAY_TIME));
         }
 
         producers.shutdown();

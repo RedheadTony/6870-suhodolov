@@ -14,13 +14,13 @@ public class Warehouse {
     private static final String THREAD_NOTIFY_ACTION = "возобновляет работу";
 
     private final int size;
-    private List<Resource> resources = new ArrayList<>();
+    private final List<Resource> resources = new ArrayList<>();
 
     public Warehouse(final int size) {
         this.size = size;
     }
 
-    public synchronized void addResource(Resource resource, final int id) {
+    public synchronized void addResource(final Resource resource, final int id) {
         String producerLog = String.format("Номер: %d Тип: производитель ", id);
 
         String producerAddResourceAction = String.format("Id ресурса: %d произведен", resource.getId());
@@ -41,7 +41,7 @@ public class Warehouse {
         notify();
     }
 
-    public synchronized Resource getResource(final int id) {
+    public synchronized void getResource(final int id) {
         String consumerLog = String.format("Номер: %d Тип: потребитель ", id);
 
         while (resources.size() <= 0) {
@@ -61,7 +61,5 @@ public class Warehouse {
         logger.info(consumerLog + consumerGetResourceAction);
 
         notify();
-
-        return resource;
     }
 }

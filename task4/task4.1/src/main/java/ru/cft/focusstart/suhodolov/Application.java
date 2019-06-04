@@ -6,16 +6,18 @@ import java.util.concurrent.*;
 
 public class Application {
 
-    public static void main(String[] args) {
-        int threadsCount = 10;
-        int step = 10_000_000 / threadsCount;
+    private static final int THREADS_COUNT = 10;
+    private static final int NUMBER = 10_000_000;
+    private static final int STEP = NUMBER / THREADS_COUNT;
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(threadsCount);
+    public static void main(String[] args) {
+
+        ExecutorService threadPool = Executors.newFixedThreadPool(THREADS_COUNT);
 
         List<Future<Long>> futures = new ArrayList<>();
 
-        for (int i = 1; i < 10_000_000; i += step) {
-            futures.add(CompletableFuture.supplyAsync(new Task(i, i + step - 1), threadPool));
+        for (int i = 1; i < NUMBER; i += STEP) {
+            futures.add(CompletableFuture.supplyAsync(new Task(i, i + STEP - 1), threadPool));
         }
 
         long result = 0;

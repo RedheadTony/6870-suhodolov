@@ -23,8 +23,5 @@ public class Application {
         for (int i = 0; i < CONSUMER_COUNT; i++) {
             consumers.submit(new Consumer(warehouse, i, CONSUMER_DELAY_TIME));
         }
-
-        producers.shutdown();
-        consumers.shutdown();
     }
 }

@@ -1,6 +1,11 @@
 package ru.cft.focusstart.suhodolov;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Producer implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(Producer.class);
 
     private final Warehouse warehouse;
 
@@ -15,15 +20,28 @@ public class Producer implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            Resource resource = new Resource();
-            warehouse.addResource(resource, id);
-            try {
+        String producerLog = String.format("Номер: %d Тип: производитель ", id);
+        try {
+            while (!Thread.interrupted()) {
                 Thread.sleep(delay);
-            } catch (InterruptedException e) {
-                System.out.println("Producer thread" + id + "has been interrupted");
-                return;
+                Resource resource = new Resource();
+                logger.info(producerLog + String.format("Id ресурса: %d произведен", resource.getId()));
+                synchronized (warehouse) {
+                    if (warehouse.isFull()) {
+                        logger.info(producerLog + "перешел в режим ожидания");
+
+                        while (warehouse.isFull()) {
+                            warehouse.wait();
+                        }
+
+                        logger.info(producerLog + "возобновляет работу");
+                    }
+                    warehouse.addResource(resource);
+                    warehouse.notifyAll();
+                }
             }
+        } catch (InterruptedException e) {
+            System.out.println("Producer thread" + id + "has been interrupted");
         }
     }
 }

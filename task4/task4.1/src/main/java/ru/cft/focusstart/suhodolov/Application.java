@@ -16,8 +16,13 @@ public class Application {
 
         List<Future<Long>> futures = new ArrayList<>();
 
-        for (int i = 1; i < NUMBER; i += STEP) {
-            futures.add(CompletableFuture.supplyAsync(new Task(i, i + STEP - 1), threadPool));
+        for (int i = 0; i < THREADS_COUNT; i++) {
+            int startVal = i * STEP + 1;
+            int endVal = (i + 1) * STEP >= NUMBER || i == THREADS_COUNT - 1
+                    ? NUMBER
+                    : (i + 1) * STEP;
+
+            futures.add(CompletableFuture.supplyAsync(new Task(startVal, endVal), threadPool));
         }
 
         long result = 0;

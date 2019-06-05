@@ -28,9 +28,7 @@ public class Consumer implements Runnable {
                     if (warehouse.isEmpty()) {
                         logger.info(consumerLog + "перешел в режим ожидания");
 
-                        while (warehouse.isEmpty()) {
-                            warehouse.wait();
-                        }
+                        warehouse.wait();
 
                         logger.info(consumerLog + "возобновляет работу");
                     }

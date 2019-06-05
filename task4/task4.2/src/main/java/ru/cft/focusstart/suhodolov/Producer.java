@@ -30,9 +30,7 @@ public class Producer implements Runnable {
                     if (warehouse.isFull()) {
                         logger.info(producerLog + "перешел в режим ожидания");
 
-                        while (warehouse.isFull()) {
-                            warehouse.wait();
-                        }
+                        warehouse.wait();
 
                         logger.info(producerLog + "возобновляет работу");
                     }

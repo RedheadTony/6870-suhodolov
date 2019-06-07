@@ -37,7 +37,7 @@ public class Producer implements Runnable {
                     }
                     logger.info(producerLog + "Id ресурса: {} произведен", resource.getId());
                     warehouse.addResource(resource);
-                    warehouse.notifyAll();
+                    warehouse.notify();
                 }
             }
         } catch (InterruptedException e) {

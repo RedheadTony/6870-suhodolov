@@ -28,15 +28,17 @@ public class Consumer implements Runnable {
                     if (warehouse.isEmpty()) {
                         logger.info(consumerLog + "перешел в режим ожидания");
 
-                        warehouse.wait();
+                        while (warehouse.isEmpty()) {
+                            warehouse.wait();
+                        }
 
                         logger.info(consumerLog + "возобновляет работу");
                     }
                     Resource resource = warehouse.getResource();
 
-                    logger.info(consumerLog + String.format("Id ресурса: %d потреблен", resource.getId()));
+                    logger.info(consumerLog + "Id ресурса: {} потреблен", resource.getId());
 
-                    warehouse.notifyAll();
+                    warehouse.notify();
                 }
                 Thread.sleep(delay);
             }

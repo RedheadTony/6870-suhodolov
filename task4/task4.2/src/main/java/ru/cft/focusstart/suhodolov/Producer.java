@@ -25,15 +25,17 @@ public class Producer implements Runnable {
             while (!Thread.interrupted()) {
                 Thread.sleep(delay);
                 Resource resource = new Resource();
-                logger.info(producerLog + String.format("Id ресурса: %d произведен", resource.getId()));
                 synchronized (warehouse) {
                     if (warehouse.isFull()) {
                         logger.info(producerLog + "перешел в режим ожидания");
 
-                        warehouse.wait();
+                        while (warehouse.isFull()) {
+                            Producer.class.wait();
+                        }
 
                         logger.info(producerLog + "возобновляет работу");
                     }
+                    logger.info(producerLog + "Id ресурса: {} произведен", resource.getId());
                     warehouse.addResource(resource);
                     warehouse.notifyAll();
                 }
